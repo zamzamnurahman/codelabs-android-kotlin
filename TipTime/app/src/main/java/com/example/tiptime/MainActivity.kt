@@ -1,40 +1,43 @@
 package com.example.tiptime
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tiptime.databinding.ActivityMainBinding
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.calculateButton.setOnClickListener {
-            calculateTip()
-        }
+        binding.calculateButton.setOnClickListener { calculateTip() }
     }
 
-    fun calculateTip() {
+    private fun calculateTip() {
         val stringInTextField = binding.costOfService.text.toString()
-        val cost = stringInTextField.toDouble()
-        val selectedId = binding.tipOption.checkedRadioButtonId
-        val tipPercentage = when(selectedId){
+        val cost = stringInTextField.toDoubleOrNull()
+        if (cost == null) {
+            binding.tipResult.text = ""
+            return
+        }
+
+        val tipPercentage = when (binding.tipOption.checkedRadioButtonId) {
             R.id.option_twenty_percent -> 0.20
             R.id.option_eighteen_percent -> 0.18
             else -> 0.15
         }
 
         var tip = tipPercentage * cost
-        val roundUp = binding.roundUpSwitch.isChecked
-        if(roundUp){
+        if (binding.roundUpSwitch.isChecked) {
             tip = kotlin.math.ceil(tip)
         }
-        val formattedtip = NumberFormat.getCurrencyInstance().format(tip)
-        binding.tipResult.text = getString(R.id.tip_amount, formattedtip)
+
+        val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
+        binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
     }
 }
