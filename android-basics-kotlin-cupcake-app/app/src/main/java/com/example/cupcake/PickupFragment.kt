@@ -19,10 +19,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cupcake.databinding.FragmentPickupBinding
+import com.example.cupcake.model.OrderViewModel
 
 /**
  * [PickupFragment] allows the user to choose a pickup date for the cupcake order.
@@ -33,6 +34,9 @@ class PickupFragment : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment.
     private var binding: FragmentPickupBinding? = null
+
+    // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
+    private val sharedViewModel: OrderViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +51,9 @@ class PickupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
-            nextButton.setOnClickListener { goToNextScreen() }
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = sharedViewModel
+            pickupFragment = this@PickupFragment
         }
     }
 

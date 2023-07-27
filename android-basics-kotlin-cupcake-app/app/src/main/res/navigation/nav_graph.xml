@@ -49,5 +49,6 @@
         android:id="@+id/summaryFragment"
         android:name="com.example.cupcake.SummaryFragment"
         android:label="@string/order_summary"
-        tools:layout="@layout/fragment_summary" />
+        tools:layout="@layout/fragment_summary">
+    </fragment>
 </navigation>
